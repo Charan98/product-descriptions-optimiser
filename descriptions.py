@@ -17,10 +17,10 @@ print(type(new_df))
 
 # For each row in our CSV file, we'll find relevant SEO keywords and optimise our meta data and product description.
 for index, row in df.iterrows():
-    description = row["ProductDescription_en"]
-    mTitle = row["ProductMetaTitle_en"]
-    mDescription = row["ProductMetaDescription_en"]
-    sku = row["ProductNumber"]
+    description = row["ProductDescription"]
+    mTitle = row["ProductMetaTitle"]
+    mDescription = row["ProductMetaDescription"]
+    sku = row["SKU"]
     seoKeywords = row["SEOKeywords"]
 
     # Optimise content using the SEO keywords

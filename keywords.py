@@ -11,16 +11,16 @@ load_dotenv(dotenvpath)
 OPENAI_API_KEY = os.getenv('OpenAI_KEY')
 client = OpenAI(api_key = OPENAI_API_KEY)
 
-df = pd.read_csv("outlets_products.csv")
+df = pd.read_csv("outlet_products.csv")
 
 new_df = pd.DataFrame(columns=['SKU', 'ProductDescription', 'ProductMetaTitle', 'ProductMetaDescription', 'SEOKeywords'])
 print(type(new_df))
 
 # For each row in our CSV file, we'll find relevant SEO keywords and optimise our meta data and product description.
 for index, row in df.iterrows():
-    description = row["ProductDescription_en"]
-    mTitle = row["ProductMetaTitle_en"]
-    mDescription = row["ProductMetaDescription_en"]
+    description = row["ProductDescription"]
+    mTitle = row["ProductMetaTitle"]
+    mDescription = row["ProductMetaDescription"]
     sku = row["ProductNumber"]
 
     # Extract initial set of keywords from the product title and description
@@ -37,7 +37,19 @@ for index, row in df.iterrows():
             }
         ]
     )
-    keywords = completion.choices[0].message.content
+    keywords = client.chat.completions.create(
+        model="gpt-4o",
+        messages=[
+            {
+                "role": "system",
+                "content": "From the provided keywords, remove all the keywords that mention happy socks or any other brand name."
+            },
+            {
+                "role": "user",
+                "content": f"Keywords: {completion.choices[0].message.content}"
+            }
+        ]
+    )
     print("Extracted keywrods from the product title and description")
 
     # Get SEO keywrods from the API
